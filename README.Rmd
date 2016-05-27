@@ -1,0 +1,51 @@
+---
+title: "README"
+author: "@laneharrison"
+date: May 26, 2016
+output: rmarkdown::github_document
+---
+
+service-imgd-climate is ...
+
+```{r}
+data <- read.csv('data/data.csv')
+
+key <- data[c(0, 1), ]
+
+data <- data[-c(1, 2), ]
+```
+
+# Dividing by Majors
+
+ Majors | minors | graduate students | non-majors
+ - | - | - | -
+ 67 | 13 | 11 | 53 
+
+# Dividing by Demographics
+
+Majors, Minors, Graduate Students (n = 91)
+Non-Majors (n = 53)
+
+LGBTQ | Male | Only White/Caucasian | Only Black/African American | Hispanic | Only American Indian/Alaskan Native | Only Other Race | More than One Race | First Generation College Students
+- | - | - | - | - | - | - | - | - |
+24.44 | 75.82 | 72.53 | 2.2 | 5.49 | 0.00 | 16.48 | 0.00 | 0.00 | 3.30 | 5.49
+7.55 | 58.49 | 64.15 | 1.89 | 11.32 | 0.00 | 18.87 | 0.00 | 1.89 | 1.89 | 16.98
+
+# Comparison Groupings
+
+Privileged Male: White, Straight, Male AND IMGD Major, Minor, or Graduate Student
+
+Answer | Frequency | Percent | Cumulative Percent
+- | - | - | -
+No | 45 | 49.45 | 49.45
+Yes | 46 | 50.55 | 100
+- | - | - | -
+Total | 91 | 100 | 100
+
+# Perceptions of Faculty
+
+TODO Get all the corresponding column names
+
+
+
+
