@@ -16,9 +16,26 @@ data <- data[-c(1, 2), ]
 Dividing by Majors
 ==================
 
-| Majors | minors | graduate students | non-majors |
-|--------|--------|-------------------|------------|
-| 67     | 13     | 11                | 53         |
+Majors | minors | graduate students | non-majors - | - | - | - 67 | 13 | 11 | 53
+
+``` r
+unique(data$Source)
+```
+
+    ## [1] IMGDMajor  IMGDcourse IMGDGrads 
+    ## 5 Levels: {'ImportId': 'embeddedData-Source'} IMGDcourse ... Source
+
+``` r
+data$IMGDStatus <- ifelse(data$Q9_1==1, "Major",
+                   ifelse(data$Q9_2==1, "Major",
+                   ifelse(data$Q9_3==1, "Minor",
+                   ifelse(data$Q9_4==1, "NonMajor",
+                   ifelse(data$Q9_5==1, "NonMajor",
+                   ifelse(data$Q8==5, "Graduate",
+                          NA ))))))
+
+# table(data$IMGDStatus)
+```
 
 Dividing by Demographics
 ========================
@@ -87,3 +104,27 @@ Privileged Male: White, Straight, Male AND IMGD Major, Minor, or Graduate Studen
 | Yes    | 46        | 50.55   | 100                |
 | -      | -         | -       | -                  |
 | Total  | 91        | 100     | 100                |
+
+``` r
+#data$Privileged <- 
+#  ifelse(data$Q4_1==1 && data$Q5==2 && data$Q1_1==1 && (data$IMGDStatus=="Major" || data$IMGDStatus=="Minor" || data$IMGDStatus=="Graduate"), "Privileged", "NonPrivileged" )
+
+data$Privileged <- 
+    ifelse( 
+      (data$IMGDStatus=="Major" | data$IMGDStatus=="Minor" | data$IMGDStatus=="Graduate") & 
+      (data$Q4_1==1 & data$Q5==2 & data$Q1_1==1), "Privileged", 
+    ifelse(
+      (data$IMGDStatus=="Major" | data$IMGDStatus=="Minor" | data$IMGDStatus=="Graduate"), "NonPrivileged", 
+    NA))
+
+table(data$Privileged)
+```
+
+    ## 
+    ## NonPrivileged    Privileged 
+    ##            42            52
+
+Perceptions of Faculty
+======================
+
+TODO Get all the corresponding column names

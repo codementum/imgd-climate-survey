@@ -20,6 +20,21 @@ data <- data[-c(1, 2), ]
  Majors | minors | graduate students | non-majors
  - | - | - | -
  67 | 13 | 11 | 53 
+ 
+```{r}
+unique(data$Source)
+
+data$IMGDStatus <- ifelse(data$Q9_1==1, "Major",
+                   ifelse(data$Q9_2==1, "Major",
+                   ifelse(data$Q9_3==1, "Minor",
+                   ifelse(data$Q9_4==1, "NonMajor",
+                   ifelse(data$Q9_5==1, "NonMajor",
+                   ifelse(data$Q8==5, "Graduate",
+                          NA ))))))
+
+# table(data$IMGDStatus)
+
+```
 
 # Dividing by Demographics
 
@@ -30,6 +45,7 @@ LGBTQ | Male | Only White/Caucasian | Only Black/African American | Hispanic | O
 - | - | - | - | - | - | - | - | - |
 24.44 | 75.82 | 72.53 | 2.2 | 5.49 | 0.00 | 16.48 | 0.00 | 0.00 | 3.30 | 5.49
 7.55 | 58.49 | 64.15 | 1.89 | 11.32 | 0.00 | 18.87 | 0.00 | 1.89 | 1.89 | 16.98
+
 
 # Comparison Groupings
 
@@ -42,10 +58,29 @@ Yes | 46 | 50.55 | 100
 - | - | - | -
 Total | 91 | 100 | 100
 
+```{r}
+
+data$Privileged <- 
+    ifelse( 
+      (data$IMGDStatus=="Major" | data$IMGDStatus=="Minor" | data$IMGDStatus=="Graduate") & 
+      (data$Q4_1==1 & data$Q5==2 & data$Q1_1==1), "Privileged", 
+    ifelse(
+      (data$IMGDStatus=="Major" | data$IMGDStatus=="Minor" | data$IMGDStatus=="Graduate"), "NonPrivileged", 
+    NA))
+
+table(data$Privileged)
+
+```
+
 # Perceptions of Faculty
 
-TODO Get all the corresponding column names
+Q12
 
+```{r}
+
+
+
+```
 
 
 
