@@ -8,11 +8,11 @@ output: rmarkdown::github_document
 service-imgd-climate is ...
 
 ```{r}
-data <- read.csv('data/data.csv')
+master <- read.csv('data/data.csv')
+source("fun.R")
 
-key <- data[c(0, 1), ]
-
-data <- data[-c(1, 2), ]
+key <- master[c(0, 1), ]
+data <- master[-c(1, 2), ]
 ```
 
 # Dividing by Majors
@@ -74,11 +74,72 @@ table(data$Privileged)
 
 # Perceptions of Faculty
 
-Q12
+(`Q12_1` -- `Q12_11`)
 
 ```{r}
 
+index <- c(
+ "Q12_1",
+ "Q12_2",
+ "Q12_3",
+ "Q12_4",
+ "Q12_5",
+ "Q12_6",
+ "Q12_7",
+ "Q12_8",
+ "Q12_9",
+ "Q12_10",
+ "Q12_11"
+)
 
+xform <- function(d, V) {
+d <- d[grep("^\\d+$", d[,V]),,drop=F]
+d[,V] <- as.numeric(as.character(d[,V]))
+return(d)
+}
+
+for (V in index){
+  data <- xform(data, V)
+}
+
+#data <- xform(data, "Q12_1")
+#data <- xform(data, "Q12_2")
+#data <- xform(data, "Q12_3")
+#data <- xform(data, "Q12_4")
+#data <- xform(data, "Q12_5")
+#data <- xform(data, "Q12_6")
+#data <- xform(data, "Q12_7")
+#data <- xform(data, "Q12_8")
+#data <- xform(data, "Q12_9")
+#data <- xform(data, "Q12_10")
+#data <- xform(data, "Q12_11")
+
+bplot <- function(V) {
+  p <- ggplot(data, aes_string("Privileged", V))
+  p <- p + geom_boxplot() + geom_jitter()
+  p <- p + expand_limits(y = c(0,6))
+  p <- p + coord_flip()
+  p <- p + theme_bw()
+  p <- p + theme(plot.title=element_text(hjust=0))
+  p <- p + theme(panel.border=element_blank())
+  p <- p + theme(panel.grid.minor=element_blank())
+  p <- p + theme(axis.ticks=element_blank())
+  p <- p + theme(legend.key=element_rect(color="white"))
+  p <- p + theme(text=element_text(family="Avenir Next Medium"))
+  p
+}
+
+bplot("Q12_1")
+bplot("Q12_2")
+bplot("Q12_3")
+bplot("Q12_4")
+bplot("Q12_5")
+bplot("Q12_6")
+bplot("Q12_7")
+bplot("Q12_8")
+bplot("Q12_9")
+bplot("Q12_10")
+bplot("Q12_11")
 
 ```
 
