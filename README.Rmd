@@ -1,13 +1,22 @@
 ---
-title: "README"
-author: "@laneharrison"
-date: May 26, 2016
+title: "IMGD Climate Plots"
+author: '@laneharrison'
+date: "May 26, 2016"
 output: rmarkdown::github_document
 ---
 
-service-imgd-climate is ...
+I re-plotted some of the IMGD Climate Survey.
 
-```{r}
+The goal is to show the raw data in addition to the aggregate.
+
+Each dot is a student's response.
+
+Some questions led to varied responses-- these may be something we should at more closely.
+
+
+```{r, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
 master <- read.csv('data/data.csv')
 source("fun.R")
 
@@ -17,9 +26,18 @@ data <- master[-c(1, 2), ]
 
 # Dividing by Majors
 
- Majors | minors | graduate students | non-majors
- - | - | - | -
- 67 | 13 | 11 | 53 
+```{include=FALSE}
+Majors | Minors | GraduateStudents | NonMajors
+------ | ------ | ---------------- | ---------
+67     | 13     | 11               | 53
+
+
+LGBTQ | Male | Only White/Caucasian | Only Black/African American | Hispanic | Only American Indian/Alaskan Native | Only Other Race | More than One Race | First Generation College Students
+- | - | - | - | - | - | - | - | - |
+24.44 | 75.82 | 72.53 | 2.2 | 5.49 | 0.00 | 16.48 | 0.00 | 0.00 | 3.30 | 5.49
+7.55 | 58.49 | 64.15 | 1.89 | 11.32 | 0.00 | 18.87 | 0.00 | 1.89 | 1.89 | 16.98
+
+```
  
 ```{r}
 unique(data$Source)
@@ -40,12 +58,6 @@ data$IMGDStatus <- ifelse(data$Q9_1==1, "Major",
 
 Majors, Minors, Graduate Students (n = 91)
 Non-Majors (n = 53)
-
-LGBTQ | Male | Only White/Caucasian | Only Black/African American | Hispanic | Only American Indian/Alaskan Native | Only Other Race | More than One Race | First Generation College Students
-- | - | - | - | - | - | - | - | - |
-24.44 | 75.82 | 72.53 | 2.2 | 5.49 | 0.00 | 16.48 | 0.00 | 0.00 | 3.30 | 5.49
-7.55 | 58.49 | 64.15 | 1.89 | 11.32 | 0.00 | 18.87 | 0.00 | 1.89 | 1.89 | 16.98
-
 
 # Comparison Groupings
 
@@ -98,50 +110,133 @@ d[,V] <- as.numeric(as.character(d[,V]))
 return(d)
 }
 
-for (V in index){
-  data <- xform(data, V)
-}
-
-#data <- xform(data, "Q12_1")
-#data <- xform(data, "Q12_2")
-#data <- xform(data, "Q12_3")
-#data <- xform(data, "Q12_4")
-#data <- xform(data, "Q12_5")
-#data <- xform(data, "Q12_6")
-#data <- xform(data, "Q12_7")
-#data <- xform(data, "Q12_8")
-#data <- xform(data, "Q12_9")
-#data <- xform(data, "Q12_10")
-#data <- xform(data, "Q12_11")
-
 bplot <- function(V) {
+  
+caption <- key[1, V] 
+caption <- paste0(strwrap(caption, 80), sep="", collapse="\n")
+  
   p <- ggplot(data, aes_string("Privileged", V))
-  p <- p + geom_boxplot() + geom_jitter()
-  p <- p + expand_limits(y = c(0,6))
+  p <- p + geom_boxplot(na.rm=TRUE) 
+#  p <- p + geom_jitter(na.rm=TRUE)
+  p <- p + geom_jitter(width=0.5, height=0.5, na.rm=TRUE)
+  p <- p + expand_limits(y = c(1,4))
+  p <- p + labs(caption=caption,x=element_blank())
   p <- p + coord_flip()
   p <- p + theme_bw()
-  p <- p + theme(plot.title=element_text(hjust=0))
   p <- p + theme(panel.border=element_blank())
   p <- p + theme(panel.grid.minor=element_blank())
   p <- p + theme(axis.ticks=element_blank())
-  p <- p + theme(legend.key=element_rect(color="white"))
-  p <- p + theme(text=element_text(family="Avenir Next Medium"))
+  p <- p + theme(plot.caption=element_text(size=12, hjust=0, margin=margin(t=15)))
+  p <- p + theme(text=element_text(family="PT Sans"))
   p
 }
 
-bplot("Q12_1")
-bplot("Q12_2")
-bplot("Q12_3")
-bplot("Q12_4")
-bplot("Q12_5")
-bplot("Q12_6")
-bplot("Q12_7")
-bplot("Q12_8")
-bplot("Q12_9")
-bplot("Q12_10")
-bplot("Q12_11")
+for (V in index){
+  data <- xform(data, V)
+  print( bplot(V) )
+}
 
 ```
 
+# Index 2: Feel Safe In Class
 
+(`Q14_1` -- `Q14_4`)
+
+```{r}
+
+index <- c(
+ "Q14_1",
+ "Q14_2",
+ "Q14_3",
+ "Q14_4"
+)
+
+for (V in index){
+  data <- xform(data, V)
+  print( bplot(V) )
+}
+
+```
+
+# Index 3: Diverse Materials
+
+(`Q15_1` -- `Q15_3`)
+
+```{r}
+
+index <- c(
+ "Q15_1",
+ "Q15_2",
+ "Q15_3"
+)
+
+for (V in index){
+  data <- xform(data, V)
+  print( bplot(V) )
+}
+
+```
+
+# Index 4: Inclusive of Difference
+
+```{r}
+
+index <- c(
+ "Q16_1",
+ "Q16_2",
+ "Q16_8",
+ "Q16_9",
+ "Q16_10"
+)
+
+for (V in index){
+  data <- xform(data, V)
+  print( bplot(V) )
+}
+
+```
+
+# Index 5: Passionate Community
+
+```{r}
+
+index <- c(
+ "Q16_2",
+ "Q16_3",
+ "Q16_4",
+ "Q16_5",
+ "Q16_6",
+ "Q16_7"
+)
+
+for (V in index){
+  data <- xform(data, V)
+  print( bplot(V) )
+}
+
+```
+
+# Index 6: Safety
+
+```{r}
+
+index <- c(
+ "Q17_1",
+ "Q17_2",
+ "Q17_3",
+ "Q17_4",
+ "Q18_1",
+ "Q18_2",
+ "Q18_3",
+ "Q19_1",
+ "Q19_2",
+ "Q19_3"
+)
+
+for (V in index){
+  data <- xform(data, V)
+  print( bplot(V) )
+}
+
+```
 
